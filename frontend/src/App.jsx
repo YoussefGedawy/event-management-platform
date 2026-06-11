@@ -5,6 +5,7 @@ import OrganizerDashboard from './pages/OrganiserDashboard';
 import Events from './pages/Events';
 import Venues from './pages/Venues';
 import Guests from './pages/Guests';
+import Tasks from './pages/Tasks';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/venues" element={<Venues />} />
         <Route path="/guests" element={<Guests />} />
+        <Route path="/tasks" element={<Tasks />} />
       </Routes>
     </BrowserRouter>
   );
