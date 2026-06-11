@@ -9,6 +9,7 @@ const venueRoutes = require('./src/routes/venueRoutes');
 const guestRoutes = require('./src/routes/guestRoutes');
 const taskRoutes = require('./src/routes/taskRoutes');
 const userRoutes = require('./src/routes/userRoutes');
+const vendorRoutes = require('./src/routes/vendorRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/venues', venueRoutes);
 app.use('/api/guests', guestRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/vendors', vendorRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Event Management API is running' });

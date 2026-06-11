@@ -6,6 +6,7 @@ import Events from './pages/Events';
 import Venues from './pages/Venues';
 import Guests from './pages/Guests';
 import Tasks from './pages/Tasks';
+import Vendors from './pages/Vendors';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/venues" element={<Venues />} />
         <Route path="/guests" element={<Guests />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/vendors" element={<Vendors />} />
       </Routes>
     </BrowserRouter>
   );
