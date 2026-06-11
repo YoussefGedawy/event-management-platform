@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import OrganizerDashboard from './pages/OrganiserDashboard';
 import Events from './pages/Events';
 import Venues from './pages/Venues';
+import Guests from './pages/Guests';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard/organizer" element={<OrganizerDashboard />} />
         <Route path="/events" element={<Events />} />
         <Route path="/venues" element={<Venues />} />
+        <Route path="/guests" element={<Guests />} />
       </Routes>
     </BrowserRouter>
   );
