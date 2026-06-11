@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const authRoutes = require('./src/routes/authRoutes');
 const eventRoutes = require('./src/routes/eventRoutes');
+const venueRoutes = require('./src/routes/venueRoutes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/venues', venueRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Event Management API is running' });
