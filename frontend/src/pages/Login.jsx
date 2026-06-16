@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import './login.css';
+import './Login.css';
 
-function login() {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -48,19 +48,19 @@ function login() {
           </p>
           <div className="feature-list">
             <div className="feature-item">
-              <span className="feature-icon">✅</span>
+              <div className="feature-icon">📅</div>
               <span>End-to-end event planning</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">✅</span>
+              <div className="feature-icon">👥</div>
               <span>Real-time guest management</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">✅</span>
+              <div className="feature-icon">🏛️</div>
               <span>Vendor & venue coordination</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">✅</span>
+              <div className="feature-icon">📊</div>
               <span>Budget tracking & reporting</span>
             </div>
           </div>
@@ -140,7 +140,9 @@ function login() {
 
           <p className="register-link">
             Don't have an account?{' '}
-            <Link to="/register">Create one free</Link>
+            <Link to="/register" style={{ color: '#4f46e5', fontWeight: '600' }}>
+              Create one free
+            </Link>
           </p>
         </div>
       </div>
@@ -148,4 +150,4 @@ function login() {
   );
 }
 
-export default login;
+export default Login;

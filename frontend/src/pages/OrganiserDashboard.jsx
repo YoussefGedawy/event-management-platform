@@ -1,8 +1,37 @@
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function OrganizerDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
+  const [stats, setStats] = useState({ events: 0, guests: 0, tasks: 0, vendors: 0 });
+
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const [eventsRes, guestsRes, tasksRes, vendorsRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/events', { headers }),
+        axios.get('http://localhost:5000/api/guests', { headers }),
+        axios.get('http://localhost:5000/api/tasks', { headers }),
+        axios.get('http://localhost:5000/api/vendors', { headers }),
+      ]);
+      setStats({
+        events: eventsRes.data.length,
+        guests: guestsRes.data.length,
+        tasks: tasksRes.data.length,
+        vendors: vendorsRes.data.length,
+      });
+    } catch (error) {
+      console.log('Error fetching stats:', error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -22,19 +51,19 @@ function OrganizerDashboard() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '30px' }}>
         <div style={{ background: '#4f46e5', color: 'white', padding: '20px', borderRadius: '12px' }}>
           <h3>Events</h3>
-          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>0</p>
+          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.events}</p>
         </div>
         <div style={{ background: '#7c3aed', color: 'white', padding: '20px', borderRadius: '12px' }}>
           <h3>Guests</h3>
-          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>0</p>
+          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.guests}</p>
         </div>
         <div style={{ background: '#0891b2', color: 'white', padding: '20px', borderRadius: '12px' }}>
           <h3>Tasks</h3>
-          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>0</p>
+          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.tasks}</p>
         </div>
         <div style={{ background: '#059669', color: 'white', padding: '20px', borderRadius: '12px' }}>
           <h3>Vendors</h3>
-          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>0</p>
+          <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.vendors}</p>
         </div>
       </div>
 
