@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import './Register.css';
 
 function Register() {
   const [name, setName] = useState('');
@@ -14,6 +15,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     try {
       await axios.post('http://localhost:5000/api/auth/register', {
         name, email, password, role
@@ -26,61 +28,90 @@ function Register() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px' }}>
-      <h2>Event Management Platform</h2>
-      <h3>Register</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <form onSubmit={handleRegister}>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Name</label><br />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
-            required
-          />
+    <div className="register-page">
+      {/* Left Side */}
+      <div className="register-left">
+        <div className="register-left-content">
+          <div className="register-brand">
+            <div className="register-brand-icon">🎯</div>
+            <span className="register-brand-name">EventFlow</span>
+          </div>
+          <h1 className="register-left-title">
+            Join the platform today
+          </h1>
+          <p className="register-left-subtitle">
+            Create your account and start managing events, venues, guests and vendors all in one place.
+          </p>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Email</label><br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
-            required
-          />
+      </div>
+
+      {/* Right Side */}
+      <div className="register-right">
+        <div className="register-card">
+          <div className="register-card-header">
+            <h2>Create an account</h2>
+            <p>Fill in your details to get started</p>
+          </div>
+
+          {error && <div className="error-banner">⚠️ {error}</div>}
+          {success && <div className="success-banner">✅ {success}</div>}
+
+          <form onSubmit={handleRegister} className="register-form">
+            <div className="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your full name"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create a password"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Role</label>
+              <select value={role} onChange={(e) => setRole(e.target.value)}>
+                <option value="organizer">Organizer</option>
+                <option value="staff">Staff</option>
+                <option value="vendor">Vendor</option>
+                <option value="guest">Guest</option>
+                <option value="venue_owner">Venue Owner</option>
+              </select>
+            </div>
+
+            <button type="submit" className="register-btn">
+              Create Account
+            </button>
+          </form>
+
+          <p className="login-link">
+            Already have an account?{' '}
+            <Link to="/login">Sign in</Link>
+          </p>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Password</label><br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
-            required
-          />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Role</label><br />
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
-          >
-            <option value="organizer">Organizer</option>
-            <option value="staff">Staff</option>
-            <option value="vendor">Vendor</option>
-            <option value="guest">Guest</option>
-            <option value="venue_owner">Venue Owner</option>
-          </select>
-        </div>
-        <button type="submit" style={{ width: '100%', padding: '10px' }}>
-          Register
-        </button>
-      </form>
-      <p>Already have an account? <Link to="/login">Login</Link></p>
+      </div>
     </div>
   );
 }
