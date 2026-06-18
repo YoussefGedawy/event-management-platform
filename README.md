@@ -3,6 +3,9 @@
 A full-stack web application for managing events end-to-end, 
 built as a university project at the German International University (GIU).
 
+> **For the grader:** see "Prerequisites" and "Setup Instructions" below.
+> Total setup time is ~5 minutes once Node.js is installed.
+
 ---
 
 ## Team Members
@@ -13,6 +16,7 @@ built as a university project at the German International University (GIU).
 | Mohamed Gohar  |
 | Mazen Ibrahim  |
 | Omar Hammam    | 
+
 ---
 
 ## Technologies Used
@@ -30,45 +34,132 @@ built as a university project at the German International University (GIU).
 
 ## User Roles
 
-| Role | Email | Password |
-|------|-------|----------|
-| Organizer | organizer@test.com | password123 |
-| Staff | any staff email | password123 |
-| Vendor | vendor@test.com | password123 |
-| Guest | guest@test.com | password123 |
-| Venue Owner | venueowner@test.com | password123 |
+All test accounts use the password: `password123`
+
+| Role | Email |
+|------|-------|
+| Organizer | organizer@test.com |
+| Staff | staff@test.com |
+| Vendor | vendor@test.com |
+| Guest | guest@test.com |
+| Venue Owner | venueowner@test.com |
+
+---
+
+## Prerequisites
+
+Before running the project, the following must be installed:
+
+| Tool | Where to get it | How to verify |
+|------|-----------------|---------------|
+| Node.js (LTS, v18+) | https://nodejs.org | Run `node -v` and `npm -v` in a terminal — both should print a version number |
+| Git | https://git-scm.com | Run `git --version` |
+
+A MongoDB connection string is also required. The team has provided one in the
+`backend/.env` file submitted with the project (see "Environment Variables" below).
+If that file is missing, contact the team or create a free cluster at
+https://www.mongodb.com/cloud/atlas.
+
+---
+---
+
+## Windows PowerShell Note
+
+If running `npm -v` or `npm install` in PowerShell shows the error
+*"npm.ps1 cannot be loaded because running scripts is disabled on this system"*,
+PowerShell's default security policy is blocking npm. Fix it once with these steps:
+
+1. Open PowerShell **as Administrator** (Start → right-click "Windows PowerShell" → Run as administrator).
+2. Run:Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+3. Confirm with `Y` and press Enter.
+4. Close PowerShell and reopen VS Code.
+
+Alternatively, switch VS Code's terminal to Command Prompt instead of PowerShell:
+`Ctrl+Shift+P` → "Terminal: Select Default Profile" → choose "Command Prompt".
 
 ---
 
 ## Setup Instructions
 
 ### 1. Clone the repository
+
+```
 git clone https://github.com/YoussefGedawy/event-management-platform.git
 cd event-management-platform
+```
 
-### 2. Backend Setup
+(Or download and extract the submitted zip, then `cd` into the extracted folder.)
+
+### 2. Create `backend/.env`
+
+Inside the `backend/` folder, create a file named `.env` with these three lines:
+
+```
+PORT=5000
+MONGO_URI=<the connection string provided by the team>
+JWT_SECRET=mysecretkey123
+```
+
+If a `.env` file was already included with the submission, skip this step.
+
+### 3. Start the backend
+
+Open a terminal:
+
+```
 cd backend
 npm install
 node server.js
+```
 
-Create a .env file inside backend:
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=mysecretkey123
+You should see:
+```
+Connected to MongoDB
+Server running on port 5000
+```
 
-### 3. Frontend Setup
+Leave this terminal running.
+
+### 4. Populate the database with dummy data
+
+Open a browser and visit:
+
+```
+http://localhost:5000/api/seed
+```
+
+You should see `✅ Seed completed! Database populated with dummy data.`
+This can be visited again at any time to reset the database.
+
+### 5. Start the frontend
+
+Open a **second** terminal (leave the backend running):
+
+```
 cd frontend
 npm install
 npm run dev
+```
+
+You should see a local URL like `http://localhost:5173`.
+
+### 6. Open the app
+
+Visit `http://localhost:5173` in your browser and log in with any of the
+test accounts in the "User Roles" table above (password: `password123`).
 
 ---
 
 ## Database and Dummy Data
 
-To populate the database with dummy data, start the backend and visit:
-http://localhost:5000/api/seed
+The `/api/seed` route (step 4 above) resets all collections and generates:
+1 organizer, 1 venue owner, 20 staff, 15 vendors, 10 venues, 20 events,
+100 guests, 50 tasks, and 20 vendor requests. The route can be visited
+again at any time to reset and re-seed the database.
 
-This generates 1 organizer, 10 staff, 20 events, 100 guests, 50 tasks, 10 vendors, 5 venues.
+(Optional) A standalone script also exists at `database/seed.js`. To use it:
+`cd database && npm install`, make sure `backend/.env` contains a valid `MONGO_URI`,
+then run `node seed.js`. The `/api/seed` route above is the recommended path.
 
 ---
 
@@ -137,9 +228,31 @@ This generates 1 organizer, 10 staff, 20 events, 100 guests, 50 tasks, 10 vendor
 
 ---
 
+## Not Implemented / Out of Scope
+
+The User Journeys document describes a broad system. To deliver a working,
+well-tested core within the project timeline, the following lower-priority
+journeys were intentionally left out of scope:
+
+- Venue booking application flow (organizer applies to a venue; venue owner
+  approves/declines). The Venue Owner dashboard is currently read-only.
+- Vendor invoicing and the organizer's invoice review.
+- Post-event guest feedback and feedback-based dashboard metrics.
+- Report generation and PDF export.
+- Day-of live messaging between organizer and guests.
+- Drag-and-drop venue floor-plan designer.
+
+The implemented features cover the core flows for all five roles
+(authentication, dashboards, event/venue/guest/task/vendor management,
+RSVPs, and sourcing requests).
+
+---
+
 ## AI Usage
 
-This project was developed with the assistance of Claude by Anthropic. The AI chatlog is in the docs/ folder. All generated code was reviewed, tested, and adapted to fit project requirements.
+This project was developed with the assistance of Claude by Anthropic.
+The AI chatlog is in the `docs/` folder. All generated code was reviewed,
+tested, and adapted to fit project requirements.
 
 ---
 
@@ -151,13 +264,3 @@ This project was developed with the assistance of Claude by Anthropic. The AI ch
 | MONGO_URI | MongoDB connection string |
 | JWT_SECRET | Secret key for JWT |
 
-Never commit the .env file to GitHub.
-
----
-
-## Running the Project
-
-1. cd backend && node server.js
-2. cd frontend && npm run dev
-3. Open http://localhost:5173
-4. Login with any test account above
