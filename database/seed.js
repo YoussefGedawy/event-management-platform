@@ -9,8 +9,13 @@ const Guest = require('../backend/src/models/Guest');
 const Task = require('../backend/src/models/Task');
 const Vendor = require('../backend/src/models/Vendor');
 const VendorRequest = require('../backend/src/models/VendorRequest');
+const fs = require('fs');
+const path = require('path');
 
-const MONGO_URI = 'mongodb://youssefgedawy2018_db_user:Test1234@ac-e8xv4vx-shard-00-00.qowjyrq.mongodb.net:27017,ac-e8xv4vx-shard-00-01.qowjyrq.mongodb.net:27017,ac-e8xv4vx-shard-00-02.qowjyrq.mongodb.net:27017/eventmanagement?ssl=true&replicaSet=atlas-a3gly6-shard-0&authSource=admin&appName=Cluster0';
+// Read MONGO_URI from backend/.env (no hardcoded credentials, no extra dependency)
+const envFile = fs.readFileSync(path.join(__dirname, '..', 'backend', '.env'), 'utf-8');
+const mongoLine = envFile.split('\n').find((line) => line.startsWith('MONGO_URI='));
+const MONGO_URI = mongoLine ? mongoLine.slice('MONGO_URI='.length).trim() : '';
 
 const seed = async () => {
   try {
@@ -19,6 +24,16 @@ const seed = async () => {
       socketTimeoutMS: 60000,
     });
     console.log('Connected to MongoDB');
+
+    // Reset: clear all collections so the seed can be run repeatedly
+    await User.deleteMany({});
+    await Event.deleteMany({});
+    await Venue.deleteMany({});
+    await Guest.deleteMany({});
+    await Task.deleteMany({});
+    await Vendor.deleteMany({});
+    await VendorRequest.deleteMany({});
+    console.log('Cleared existing data');
 
     const hashedPassword = await bcrypt.hash('password123', 10);
 
@@ -30,7 +45,15 @@ const seed = async () => {
     });
 
     const staffMembers = [];
-    for (let i = 0; i < 20; i++) {
+    // Known staff login so the Staff dashboard can be demoed (gets tasks via index 0)
+    const knownStaff = await User.create({
+      name: 'Test Staff',
+      email: 'staff@test.com',
+      password: hashedPassword,
+      role: 'staff'
+    });
+    staffMembers.push(knownStaff);
+    for (let i = 0; i < 19; i++) {
       const staff = await User.create({
         name: faker.person.fullName(),
         email: faker.internet.email(),
@@ -112,7 +135,16 @@ const seed = async () => {
 
     const rsvpStatuses = ['pending', 'attending', 'not_attending', 'maybe'];
     const dietaryOptions = ['None', 'Vegetarian', 'Vegan', 'Halal', 'Gluten-free'];
-    for (let i = 0; i < 100; i++) {
+    // Known guest invitation so the Guest dashboard can be demoed
+    await Guest.create({
+      name: 'Test Guest',
+      email: 'guest@test.com',
+      event: events[0]._id,
+      rsvpStatus: 'pending',
+      dietaryPreference: 'Vegetarian',
+      checkedIn: false
+    });
+    for (let i = 0; i < 99; i++) {
       await Guest.create({
         name: faker.person.fullName(),
         email: faker.internet.email(),
